@@ -16,7 +16,7 @@ spring:
     open-in-view: false
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
@@ -78,10 +78,16 @@ spring:
       on-profile: prod
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/bistro
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/bistro}
     username: ${POSTGRES_USER:bistro}
     password: ${POSTGRES_PASSWORD:bistro}
     driver-class-name: org.postgresql.Driver
+
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
 
   jpa:
     hibernate:
@@ -100,3 +106,37 @@ server:
 logging:
   level:
     com.bistro: INFO
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  datasource:
+    url: jdbc:h2:mem:bistro-test;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+
+  mail:
+    host: localhost
+    port: 1025
+
+  flyway:
+    enabled: false
+
+logging:
+  level:
+    com.bistro: WARN
