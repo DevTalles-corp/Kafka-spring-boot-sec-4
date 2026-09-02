@@ -39,3 +39,22 @@ services:
     ports:
       - "1025:1025"   # SMTP (por acá le mandamos)
       - "8025:8025"   # UI web (por acá los vemos)
+
+  postgres:
+    image: postgres:17
+    container_name: bistro-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: bistro
+      POSTGRES_USER: bistro
+      POSTGRES_PASSWORD: bistro
+
+
+
+
+
+
+
+
+
